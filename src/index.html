@@ -10,121 +10,69 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script src="index.js" defer></script>
   </head>
   <body class="bg-gray-50 min-h-screen">
-    <div id="app" class="container mx-auto px-4 py-8">
-      <header class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">
-          Welcome to Your Webpack + Tailwind Template
-        </h1>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-          This is a modern development setup with Webpack, JavaScript, and
-          Tailwind CSS. Start building your next project!
-        </p>
-      </header>
-
-      <main class="max-w-4xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Feature Card 1 -->
-          <div
-            class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
-          >
-            <div
-              class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4"
+    <div class="mx-auto px-4 py-8 max-w-3xl">
+      <form>
+        <div class="grid gap-6 mb-6 md:grid-cols-2">
+          <div>
+            <label
+              for="first_name"
+              class="block mb-2 text-sm font-medium text-gray-900"
             >
-              <svg
-                class="w-6 h-6 text-primary-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                ></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">
-              Fast Development
-            </h3>
-            <p class="text-gray-600">
-              Hot reload and fast build times with Webpack dev server.
-            </p>
+              First name
+            </label>
+            <input
+              type="text"
+              id="first_name"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="John"
+              required
+            />
           </div>
-
-          <!-- Feature Card 2 -->
-          <div
-            class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
-          >
-            <div
-              class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4"
+          <div>
+            <label
+              for="last_name"
+              class="block mb-2 text-sm font-medium text-gray-900"
             >
-              <svg
-                class="w-6 h-6 text-primary-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"
-                ></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Modern CSS</h3>
-            <p class="text-gray-600">
-              Utility-first CSS framework with Tailwind CSS.
-            </p>
-          </div>
-
-          <!-- Feature Card 3 -->
-          <div
-            class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
-          >
-            <div
-              class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4"
-            >
-              <svg
-                class="w-6 h-6 text-primary-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                ></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">
-              ES6+ Support
-            </h3>
-            <p class="text-gray-600">
-              Modern JavaScript features with Babel transpilation.
-            </p>
+              Last name
+            </label>
+            <input
+              type="text"
+              id="last_name"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Doe"
+              required
+            />
           </div>
         </div>
+        <button
+          type="submit"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
+        >
+          Submit
+        </button>
+      </form>
 
-        <div class="mt-12 text-center">
-          <button
-            id="demo-button"
-            class="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-          >
-            Click me!
-          </button>
-          <p id="demo-text" class="mt-4 text-gray-600"></p>
-        </div>
-      </main>
-
-      <footer class="mt-16 text-center text-gray-500">
-        <p>Built with ❤️ using Webpack + Tailwind CSS</p>
-      </footer>
+      <!-- Results Table -->
+      <div id="results-container" class="mt-8 hidden">
+        <h2 class="text-lg font-semibold mb-4">Driver Information</h2>
+        <table
+          class="min-w-full text-sm text-left border border-gray-300 rounded-lg overflow-hidden"
+        >
+          <thead class="bg-gray-200">
+            <tr>
+              <th class="px-4 py-2">Driver Name</th>
+              <th class="px-4 py-2">Driver Number</th>
+              <th class="px-4 py-2">Race Name</th>
+              <th class="px-4 py-2">Position</th>
+              <th class="px-4 py-2">Points</th>
+            </tr>
+          </thead>
+          <tbody id="results-body" class="bg-white"></tbody>
+        </table>
+      </div>
     </div>
   </body>
 </html>

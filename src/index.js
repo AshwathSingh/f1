@@ -1,84 +1,66 @@
-// Import Tailwind CSS
 import "./styles.css";
 
-// Import example component (uncomment to use)
-// import { ExampleComponent } from './components/ExampleComponent.js';
-
-// Main application class
-class App {
-  constructor() {
-    this.clickCount = 0;
-    this.init();
-  }
-
-  init() {
-    this.setupEventListeners();
-    this.showWelcomeMessage();
-
-    // Uncomment to demonstrate component usage
-    // this.initExampleComponent();
-  }
-
-  setupEventListeners() {
-    const demoButton = document.getElementById("demo-button");
-    if (demoButton) {
-      demoButton.addEventListener("click", () => this.handleButtonClick());
-    }
-  }
-
-  handleButtonClick() {
-    this.clickCount++;
-    const demoText = document.getElementById("demo-text");
-
-    if (demoText) {
-      const messages = [
-        "Great! The JavaScript is working! 🎉",
-        "You clicked again! Keep going! 🚀",
-        "Amazing! This template is fully functional! ✨",
-        "You're getting the hang of it! 💪",
-        "Perfect! Everything is working smoothly! 🎯",
-      ];
-
-      const message =
-        messages[Math.min(this.clickCount - 1, messages.length - 1)];
-      demoText.textContent = message;
-
-      // Add a fun animation class
-      demoText.classList.add("animate-pulse");
-      setTimeout(() => {
-        demoText.classList.remove("animate-pulse");
-      }, 1000);
-    }
-  }
-
-  // Example of how to use components
-  // initExampleComponent() {
-  //   const componentContainer = document.createElement('div');
-  //   componentContainer.className = 'mt-8';
-  //   document.querySelector('main').appendChild(componentContainer);
-  //   new ExampleComponent(componentContainer);
-  // }
-
-  showWelcomeMessage() {
-    console.log("🚀 Webpack + Tailwind Template is ready!");
-    console.log("📝 Available commands:");
-    console.log("   npm run dev    - Start development server");
-    console.log("   npm run build  - Build for production");
-    console.log("   npm run watch  - Watch for changes");
-    console.log("");
-    console.log("💡 Tips:");
-    console.log("   - Edit src/index.html for HTML changes");
-    console.log("   - Edit src/styles.css for CSS changes");
-    console.log("   - Edit src/index.js for JavaScript changes");
-    console.log("   - Create components in src/components/");
-    console.log("   - Use Tailwind classes for styling");
-  }
-}
-
-// Initialize the app when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
-  new App();
-});
+  const form = document.querySelector("form");
+  const driverNameFirst = document.getElementById("first_name");
+  const driverNameSecond = document.getElementById("last_name");
+  const resultsContainer = document.getElementById("results-container");
+  const resultsBody = document.getElementById("results-body");
 
-// Export for potential module usage
-export default App;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    resultsBody.innerHTML = ""; // clear previous results
+
+    try {
+      // Step 1: Find driver
+      const driverRes = await fetch(
+        `https://api.openf1.org/v1/drivers?first_name=${driverNameFirst.value}&last_name=${driverNameSecond.value}`
+      );
+      const drivers = await driverRes.json();
+
+      if (drivers.length === 0) {
+        resultsContainer.classList.remove("hidden");
+        resultsBody.innerHTML = `<tr><td colspan="5" class="px-4 py-2 text-center text-red-500">No driver found.</td></tr>`;
+        return;
+      }
+
+      const driverId = drivers[0].driver_number;
+      const driverFullName = drivers[0].full_name;
+
+      // Step 2: Get latest race result
+      const racesRes = await fetch(
+        `https://api.openf1.org/v1/session_result?driver_number=${driverId}&session_key=latest`
+      );
+      const races = await racesRes.json();
+
+      if (races.length === 0) {
+        resultsContainer.classList.remove("hidden");
+        resultsBody.innerHTML = `<tr><td colspan="5" class="px-4 py-2 text-center text-red-500">No race data found.</td></tr>`;
+        return;
+      }
+
+      const lastRace = races[0];
+
+      const name = await fetch(
+        `https://api.openf1.org/v1/sessions?session_key=${racesRes.session_key}`
+      );
+
+      const raceName = await name.json();
+      // Step 3: Populate table
+      resultsContainer.classList.remove("hidden");
+      resultsBody.innerHTML = `
+          <tr>
+            <td class="px-4 py-2">${driverFullName}</td>
+            <td class="px-4 py-2">${driverId}</td>
+            <td class="px-4 py-2">${raceName.circuit_short_name || "N/A"}</td>
+            <td class="px-4 py-2">${lastRace.position || "N/A"}</td>
+            <td class="px-4 py-2">${lastRace.points || "0"}</td>
+          </tr>
+        `;
+    } catch (error) {
+      console.error("Error fetching driver or race data:", error);
+      resultsContainer.classList.remove("hidden");
+      resultsBody.innerHTML = `<tr><td colspan="5" class="px-4 py-2 text-center text-red-500">Error fetching data.</td></tr>`;
+    }
+  });
+});
